@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
+    <LinearLayout
+        android:id="@+id/container-entry-details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/text_view_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/text_view_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:id="@+id/text_view_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/button_edit_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EDIT"/>
+        <Button
+            android:id="@+id/button_delete_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DELETE"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container-edit-entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date:"/>
+        <EditText android:id="@+id/edit_text_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Type:"/>
+        <RadioGroup
+            android:id="@+id/radio_group_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/radio_button_type_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="In" />
+            <RadioButton
+                android:id="@+id/radio_button_type_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Out"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Amount:"/>
+        <EditText android:id="@+id/edit_text_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="500.00"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description:"/>
+        <EditText android:id="@+id/edit_text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:maxLines="1"/>
+
+        <Button android:id="@+id/button_confirm_entry_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Edit"></Button>
+
+        <Button android:id="@+id/button_cancel_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel"></Button>
+    </LinearLayout>
+
+</LinearLayout>

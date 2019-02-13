@@ -90,6 +90,7 @@ public class ViewEntriesActivity extends AppCompatActivity {
 
         int totalEntries = entries.size();
 
+
         ViewHolder.TextTotalEntries.setText("Total Entries : "+String.valueOf(totalEntries));
 
         EntryAdapter entryAdapter = new EntryAdapter(entries,getApplicationContext());

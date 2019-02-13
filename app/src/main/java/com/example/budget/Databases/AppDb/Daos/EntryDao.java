@@ -10,7 +10,7 @@ import java.util.List;
 
 @Dao
 public interface EntryDao {
-    @Query("SELECT * FROM entry WHERE is_deleted = 0 ORDER BY date DESC")
+    @Query("SELECT * FROM entry WHERE is_deleted = 0 ORDER BY creation_date DESC")
     List<Entry> getAll();
 
     @Query("SELECT * FROM entry WHERE id IN (:ids) AND is_deleted = 0")

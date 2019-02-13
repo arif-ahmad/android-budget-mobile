@@ -9,6 +9,7 @@ import com.example.budget.Helpers.DateHelper;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -22,11 +23,15 @@ public class Entry {
     public String type;
     public Double amount;
     public String description;
-    public long date;
+    public long date = DateHelper.LocalDateToUnixTimestamp(LocalDateTime.now());
 
     @NonNull
     @ColumnInfo(name="is_deleted")
     public int isDeleted = 0;
+
+    @NonNull
+    @ColumnInfo(name="creation_date")
+    public long creationDate;
 
     public static Entry getRandom(){
         int randomNumber = (int)(Math.random() * 500 + 1);

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -70,86 +71,81 @@ public class EntryDetailsActivity extends AppCompatActivity {
         ViewHolder.RadioButtonTypeIn = (RadioButton) findViewById(R.id.radio_button_type_in);
         ViewHolder.RadioButtonTypeOut = (RadioButton) findViewById(R.id.radio_button_type_out);
         ViewHolder.ButtonCancelEdit = (Button) findViewById(R.id.button_cancel_edit);
-        ViewHolder.ButtonEditEntry =(Button) findViewById(R.id.button_edit_entry);
         ViewHolder.EditTextDate = (EditText) findViewById(R.id.edit_text_date);
         ViewHolder.RadioGroupType = (RadioGroup) findViewById(R.id.radio_group_type);
-        ViewHolder.ButtonDeleteEntry = (Button) findViewById(R.id.button_delete_entry);
+    }
+
+    private void startEdit(){
+        ViewHolder.DetailsContainer.setVisibility(View.GONE);
+        ViewHolder.EditTextAmount.setText(String.valueOf(selectedEntry.amount));
+        ViewHolder.EditTextDescription.setText(selectedEntry.description);
+        ViewHolder.EditTextDate.setText(selectedEntry.getFormattedDate());
+        switch(selectedEntry.type){
+            case "in":
+                ViewHolder.RadioButtonTypeIn.setChecked(true);
+                break;
+            case "out":
+                ViewHolder.RadioButtonTypeOut.setChecked(true);
+                break;
+        }
+        editedEntry.id = selectedEntry.id;
+        editedEntry.amount = selectedEntry.amount;
+        editedEntry.description = selectedEntry.description;
+        editedEntry.type = selectedEntry.type;
+        editedEntry.date = selectedEntry.date;
+        ViewHolder.EditContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void confirmEdit(){
+        Double amount  = Double.valueOf(ViewHolder.EditTextAmount.getText().toString());
+        String description = ViewHolder.EditTextDescription.getText().toString();
+        String type = "";
+
+        editedEntry.amount = amount;
+
+        editedEntry.description = description;
+
+        int typeRadioButtonId = ViewHolder.RadioGroupType.getCheckedRadioButtonId();
+        switch(typeRadioButtonId){
+            case R.id.radio_button_type_in:
+                type="in";
+                break;
+            case R.id.radio_button_type_out:
+                type = "out";
+                break;
+        }
+        editedEntry.type = type;
+
+        AppDatabase appDatabase = AppDatabaseFactory.getInstance();
+        appDatabase.entryDao().update(editedEntry.id,editedEntry.date,editedEntry.type,editedEntry.amount,editedEntry.description);
+
+        selectedEntry.description = description;
+        selectedEntry.amount = amount;
+        selectedEntry.type = type;
+        selectedEntry.date = editedEntry.date;
+
+        setDetails();
+        AndroidHelper.hideKeyboard(currentActivity);
+        ViewHolder.EditContainer.setVisibility(View.GONE);
+        ViewHolder.DetailsContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void deleteEntry(){
+        AppDatabase appDatabase = AppDatabaseFactory.getInstance();
+        appDatabase.entryDao().delete(selectedEntry.id);
+        currentActivity.finish();
     }
 
     private void addListeners(){
-        ViewHolder.ButtonEditEntry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewHolder.DetailsContainer.setVisibility(View.GONE);
-                ViewHolder.EditTextAmount.setText(String.valueOf(selectedEntry.amount));
-                ViewHolder.EditTextDescription.setText(selectedEntry.description);
-                ViewHolder.EditTextDate.setText(selectedEntry.getFormattedDate());
-                switch(selectedEntry.type){
-                    case "in":
-                        ViewHolder.RadioButtonTypeIn.setChecked(true);
-                        break;
-                    case "out":
-                        ViewHolder.RadioButtonTypeOut.setChecked(true);
-                        break;
-                }
-                editedEntry.id = selectedEntry.id;
-                editedEntry.amount = selectedEntry.amount;
-                editedEntry.description = selectedEntry.description;
-                editedEntry.type = selectedEntry.type;
-                editedEntry.date = selectedEntry.date;
-                ViewHolder.EditContainer.setVisibility(View.VISIBLE);
 
-            }
-        });
 
         ViewHolder.ButtonConfirmEntryEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Double amount  = Double.valueOf(ViewHolder.EditTextAmount.getText().toString());
-                String description = ViewHolder.EditTextDescription.getText().toString();
-                String type = "";
-
-                editedEntry.amount = amount;
-
-                editedEntry.description = description;
-
-                int typeRadioButtonId = ViewHolder.RadioGroupType.getCheckedRadioButtonId();
-                switch(typeRadioButtonId){
-                    case R.id.radio_button_type_in:
-                        type="in";
-                        break;
-                    case R.id.radio_button_type_out:
-                        type = "out";
-                        break;
-                }
-                editedEntry.type = type;
-
-                AppDatabase appDatabase = AppDatabaseFactory.getInstance();
-                appDatabase.entryDao().update(editedEntry.id,editedEntry.date,editedEntry.type,editedEntry.amount,editedEntry.description);
-
-                selectedEntry.description = description;
-                selectedEntry.amount = amount;
-                selectedEntry.type = type;
-                selectedEntry.date = editedEntry.date;
-
-                setDetails();
-                AndroidHelper.hideKeyboard(currentActivity);
-                ViewHolder.EditContainer.setVisibility(View.GONE);
-                ViewHolder.DetailsContainer.setVisibility(View.VISIBLE);
-
-
-
+                confirmEdit();
             }
         });
 
-        ViewHolder.ButtonDeleteEntry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppDatabase appDatabase = AppDatabaseFactory.getInstance();
-                appDatabase.entryDao().delete(selectedEntry.id);
-                currentActivity.finish();
-            }
-        });
 
         ViewHolder.EditTextDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,9 +218,23 @@ public class EntryDetailsActivity extends AppCompatActivity {
         ViewHolder.TextViewAmount.setText(String.valueOf(selectedEntry.amount));
         ViewHolder.TextViewDescription.setText(selectedEntry.description);
     }
+
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.edit:
+                startEdit();
+                break;
+            case R.id.delete:
+                deleteEntry();
+                break;
             case android.R.id.home:
                 onBackPressed();
                 return true;

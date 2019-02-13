@@ -23,16 +23,6 @@
             android:id="@+id/text_view_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/button_edit_entry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="EDIT"/>
-        <Button
-            android:id="@+id/button_delete_entry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="DELETE"/>
     </LinearLayout>
 
     <LinearLayout

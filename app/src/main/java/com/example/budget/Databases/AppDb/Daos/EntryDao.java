@@ -16,7 +16,7 @@ public interface EntryDao {
     @Query("SELECT * FROM entry WHERE id IN (:ids) AND is_deleted = 0")
     List<Entry> loadAllByIds(String[] ids);
 
-    @Query("SELECT * FROM entry WHERE date >=:startDate AND date<=:endDate")
+    @Query("SELECT * FROM entry WHERE date >=:startDate AND date<=:endDate AND is_deleted = 0")
     List<Entry> getWithinDateRange(long startDate, long endDate);
 
     @Query("UPDATE entry SET date=:date,type=:type,amount=:amount,description=:description WHERE id = :id AND is_deleted = 0")

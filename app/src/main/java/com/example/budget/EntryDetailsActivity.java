@@ -131,6 +131,7 @@ public class EntryDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteEntry(){
+
         AppDatabase appDatabase = AppDatabaseFactory.getInstance();
         appDatabase.entryDao().delete(selectedEntry.id);
         currentActivity.finish();
@@ -206,9 +207,10 @@ public class EntryDetailsActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            onBackPressed();
+                            currentActivity.finish();
                         }
                     });
+            alertDialog.show();
         }
 
         addListeners();

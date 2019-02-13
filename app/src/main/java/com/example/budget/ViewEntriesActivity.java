@@ -2,6 +2,7 @@ package com.example.budget;
 import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
@@ -107,6 +108,7 @@ public class ViewEntriesActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        Log.w("RESUME_ISSUE","Resume state");
         refreshEntriesList();
     }
 

@@ -36,11 +36,22 @@ public class ViewEntriesActivity extends AppCompatActivity {
         ViewHolder.TextTotalAmount = (TextView) findViewById(R.id.text_total_amount);
     }
 
+    private void validateDateRange(){
+        if(DateHelper.LocalDateToUnixTimestamp(selectedStartDate) > DateHelper.LocalDateToUnixTimestamp(selectedEndDate)){
+            selectedStartDate = selectedEndDate;
+        }else{
+        }
+    }
+    private void refreshDateRangeInputLabel(){
+        ViewHolder.EditTextStartDate.setText(DateHelper.localDateToFormattedString(selectedStartDate));
+        ViewHolder.EditTextEndDate.setText(DateHelper.localDateToFormattedString(selectedEndDate));
+    }
     private void addListeners(){
         final DatePickerDialog startDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 selectedStartDate = LocalDate.of(year,month+1,dayOfMonth);
-                ViewHolder.EditTextStartDate.setText(DateHelper.localDateToFormattedString(selectedStartDate));
+                validateDateRange();
+                refreshDateRangeInputLabel();
                 refreshEntriesList();
             }
         }, selectedStartDate.getYear(), selectedStartDate.getMonthValue()-1, selectedStartDate.getDayOfMonth());
@@ -49,7 +60,8 @@ public class ViewEntriesActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 selectedEndDate = LocalDate.of(year,month+1,dayOfMonth);
-                ViewHolder.EditTextEndDate.setText(DateHelper.localDateToFormattedString(selectedEndDate));
+                validateDateRange();
+                refreshDateRangeInputLabel();
                 refreshEntriesList();
 
             }

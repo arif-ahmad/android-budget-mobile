@@ -74,6 +74,7 @@ public class ViewEntriesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_entries);
+        setTitle("Entries");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initialiseViewHolder();

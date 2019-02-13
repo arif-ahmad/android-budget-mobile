@@ -3,7 +3,6 @@ package com.example.budget;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -76,6 +74,7 @@ public class EntryDetailsActivity extends AppCompatActivity {
     }
 
     private void startEdit(){
+        setTitle("Edit entry");
         ViewHolder.DetailsContainer.setVisibility(View.GONE);
         ViewHolder.EditTextAmount.setText(String.valueOf(selectedEntry.amount));
         ViewHolder.EditTextDescription.setText(selectedEntry.description);
@@ -131,10 +130,25 @@ public class EntryDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteEntry(){
-
-        AppDatabase appDatabase = AppDatabaseFactory.getInstance();
-        appDatabase.entryDao().delete(selectedEntry.id);
-        currentActivity.finish();
+        final AlertDialog alertDialog = new AlertDialog.Builder(EntryDetailsActivity.this).create();
+        alertDialog.setTitle("Delete entry");
+        alertDialog.setMessage("Are you sure you want to delete the entry?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.show();
+                        AppDatabase appDatabase = AppDatabaseFactory.getInstance();
+                        appDatabase.entryDao().delete(selectedEntry.id);
+                        currentActivity.finish();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 
     private void addListeners(){
@@ -157,6 +171,7 @@ public class EntryDetailsActivity extends AppCompatActivity {
         ViewHolder.ButtonCancelEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setTitle("Entry");
                 AndroidHelper.hideKeyboard(currentActivity);
                 ViewHolder.EditContainer.setVisibility(View.GONE);
                 ViewHolder.DetailsContainer.setVisibility(View.VISIBLE);
@@ -168,6 +183,7 @@ public class EntryDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         currentActivity = this;
+        setTitle("Entry");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -224,7 +240,7 @@ public class EntryDetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.new_entry_menu, menu);
         return true;
     }
 

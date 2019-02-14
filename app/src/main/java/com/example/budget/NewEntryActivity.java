@@ -19,6 +19,7 @@ import com.example.budget.Databases.AppDb.AppDatabase;
 import com.example.budget.Databases.AppDb.AppDatabaseFactory;
 import com.example.budget.Databases.AppDb.Entities.Entry;
 import com.example.budget.Helpers.DateHelper;
+import com.example.budget.Helpers.NavigationBottomHelper;
 import com.example.budget.Helpers.StringHelper;
 
 import java.time.LocalDate;
@@ -47,6 +48,7 @@ public class NewEntryActivity extends AppCompatActivity {
 
         Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         LocalDate localDate = LocalDate.now();
+        NavigationBottomHelper.setGeneral(currentActivity);
 
         editTextDate = (EditText) findViewById(R.id.edit_text_date);
         editTextDate.setOnClickListener(new View.OnClickListener() {

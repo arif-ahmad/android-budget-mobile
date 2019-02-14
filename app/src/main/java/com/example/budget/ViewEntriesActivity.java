@@ -15,6 +15,7 @@ import com.example.budget.Databases.AppDb.AppDatabaseFactory;
 import com.example.budget.Databases.AppDb.Entities.Entry;
 import com.example.budget.Databases.AppDb.Helpers.EntryHelper;
 import com.example.budget.Helpers.DateHelper;
+import com.example.budget.Helpers.NavigationBottomHelper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,7 +33,6 @@ public class ViewEntriesActivity extends AppCompatActivity {
     public void initialiseViewHolder(){
         ViewHolder.EditTextStartDate = (EditText) findViewById(R.id.edit_text_start_date);
         ViewHolder.EditTextEndDate = (EditText) findViewById(R.id.edit_text_end_date);
-        ViewHolder.TextTotalEntries = (TextView) findViewById(R.id.text_total_entries);
         ViewHolder.TextTotalAmount = (TextView) findViewById(R.id.text_total_amount);
     }
 
@@ -89,6 +89,8 @@ public class ViewEntriesActivity extends AppCompatActivity {
         setTitle("Entries");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        NavigationBottomHelper.setGeneral(this);
+
         initialiseViewHolder();
 
         addListeners();
@@ -108,8 +110,6 @@ public class ViewEntriesActivity extends AppCompatActivity {
         int totalEntries = entries.size();
         double totalAmount = EntryHelper.getTotalAmount(entries);
 
-
-        ViewHolder.TextTotalEntries.setText("Total Entries : "+String.valueOf(totalEntries));
         ViewHolder.TextTotalAmount.setText(String.valueOf(totalAmount));
 
         EntryAdapter entryAdapter = new EntryAdapter(entries,getApplicationContext());

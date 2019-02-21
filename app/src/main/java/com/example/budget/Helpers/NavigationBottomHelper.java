@@ -13,7 +13,7 @@ import com.example.budget.R;
 import com.example.budget.ViewEntriesActivity;
 
 public class NavigationBottomHelper {
-    public static void setGeneral(final Activity activity){
+    public static BottomNavigationView setGeneral(final Activity activity){
         BottomNavigationView bottomNavigationView = (BottomNavigationView) activity.findViewById(R.id.navigation_bottom);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -36,6 +36,6 @@ public class NavigationBottomHelper {
                 return false;
             }
         });
-
+        return bottomNavigationView;
     }
 }

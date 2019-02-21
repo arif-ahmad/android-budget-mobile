@@ -1,12 +1,16 @@
 package com.example.budget;
 import android.app.DatePickerDialog;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +25,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ViewEntriesActivity extends AppCompatActivity {
+
+    boolean firstLayoutDone = false;
     LocalDate selectedStartDate = LocalDate.now();
     LocalDate selectedEndDate = LocalDate.now();
 
@@ -29,11 +35,16 @@ public class ViewEntriesActivity extends AppCompatActivity {
         public static EditText EditTextEndDate = null;
         public static TextView TextTotalEntries = null;
         public static TextView TextTotalAmount = null;
+        public static ListView ListEntries  = null;
+        public static LinearLayout LinearLayoutMainContainer = null;
+        public static BottomNavigationView BottomNavigation = null;
     }
     public void initialiseViewHolder(){
         ViewHolder.EditTextStartDate = (EditText) findViewById(R.id.edit_text_start_date);
         ViewHolder.EditTextEndDate = (EditText) findViewById(R.id.edit_text_end_date);
         ViewHolder.TextTotalAmount = (TextView) findViewById(R.id.text_total_amount);
+        ViewHolder.ListEntries = (ListView) findViewById(R.id.list_entries);
+        ViewHolder.LinearLayoutMainContainer = (LinearLayout) findViewById(R.id.linear_layout_main_container);
     }
 
     private void validateDateRange(){
@@ -82,26 +93,6 @@ public class ViewEntriesActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_entries);
-        setTitle("Entries");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        NavigationBottomHelper.setGeneral(this);
-
-        initialiseViewHolder();
-
-        addListeners();
-
-        ViewHolder.EditTextStartDate.setText(DateHelper.localDateToFormattedString(selectedStartDate));
-        ViewHolder.EditTextEndDate.setText(DateHelper.localDateToFormattedString(selectedEndDate));
-
-        refreshEntriesList();
-
-    }
-
     private void refreshEntriesList(){
         ArrayList<Entry> entries = (ArrayList<Entry>)AppDatabaseFactory
                 .getInstance().entryDao()
@@ -114,8 +105,48 @@ public class ViewEntriesActivity extends AppCompatActivity {
 
         EntryAdapter entryAdapter = new EntryAdapter(entries,getApplicationContext());
 
-        ListView listEntries = (ListView) findViewById(R.id.list_entries);
-        listEntries.setAdapter(entryAdapter);
+        ViewHolder.ListEntries.setAdapter(entryAdapter);
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_entries);
+        setTitle("Entries");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initialiseViewHolder();
+
+        ViewHolder.BottomNavigation = NavigationBottomHelper.setGeneral(this);
+        ListView listEntries = ViewHolder.ListEntries;
+
+
+        addListeners();
+
+        ViewHolder.EditTextStartDate.setText(DateHelper.localDateToFormattedString(selectedStartDate));
+        ViewHolder.EditTextEndDate.setText(DateHelper.localDateToFormattedString(selectedEndDate));
+
+        refreshEntriesList();
+    }
+
+    @Override
+    public void onWindowFocusChanged (boolean hasFocus) {
+
+        if(firstLayoutDone == false){
+            ViewGroup.LayoutParams params = ViewHolder.ListEntries.getLayoutParams();
+            params.height = ViewHolder.ListEntries.getMeasuredHeight() - ViewHolder.BottomNavigation.getMeasuredHeight();
+            ViewHolder.ListEntries.setLayoutParams(params);
+            firstLayoutDone = true;
+        }
+
+        Log.e("APP","HEIGHT="+ String.valueOf(ViewHolder.BottomNavigation.getMeasuredHeight()));
+
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
     }
 
     @Override
